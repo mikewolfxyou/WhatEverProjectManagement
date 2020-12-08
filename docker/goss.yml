@@ -1,0 +1,3 @@
+process:
+  dotnet:
+    running: true
