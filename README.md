@@ -59,5 +59,21 @@ PUT /project-management/project/{id}
 
 After install .Net Core and Rider, in Rider open solution file: ACMEProjectmanagement.sln 
 
+## run test
+In the command line 
+```
+dotnet test
+```
+## run code
+In the command line
+```
+cd src/ProjectManagement.Api
+dotnet run
+```
+ then open the browser use url:
+```
+http://localhost:5000/swagger
+```
+
 # TODO 
 Append more unit tests for the validator and project reppsitory. 
