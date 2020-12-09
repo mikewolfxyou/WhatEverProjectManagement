@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
 
@@ -83,12 +83,10 @@ namespace ProjectManagement.Api.Controllers
         
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async  Task<string> Get()
+        public async Task<string> Get()
         {
             var projects = await _projectRepository.GetProjectsAsync();
-            var entries = projects.Select(d =>
-                $"\"{d.Key}\": [{string.Join(",", d.Value)}]");
-            return "{" + string.Join(",", entries) + "}";
+            return JsonSerializer.Serialize(projects);
         }
     }
 }

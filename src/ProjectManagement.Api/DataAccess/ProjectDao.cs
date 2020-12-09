@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
+using Ubiety.Dns.Core.Records.NotUsed;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ProjectManagement.Api.DataAccess
 {
@@ -39,23 +42,26 @@ namespace ProjectManagement.Api.DataAccess
             _databaseFactory = databaseFactory;
         }
 
-        public async  Task<Dictionary<int, Project>> GetAsync()
+        public async Task<IEnumerable<Project>> GetAsync()
         {
             await using var connection = await _databaseFactory.CreateConnection();
-            
-            const string sql = "SELECT * FROM project_management.project";
+            await using var cmd = new MySqlCommand(@"SELECT * FROM project_management.project", connection);
 
-            await using var cmd = new MySqlCommand(sql, connection);
+            var rdr = await cmd.ExecuteReaderAsync();
 
-            await using var rdr = await cmd.ExecuteReaderAsync();
-
-            while (rdr.Read())
+            var projects = new List<Project>();
+            while (await rdr.ReadAsync())
             {
-                Console.WriteLine("{0} {1} {2} {3}", rdr.GetInt32(0), rdr.GetString(1), 
-                    rdr.GetInt32(2), rdr.GetString(3));
+                projects.Add(new Project
+                {
+                    Id = rdr.GetInt32(0),
+                    Name = rdr.GetString(1),
+                    OwnerEmployeeId = rdr.GetInt32(2),
+                    ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(rdr.GetString(3))
+                });
             }
-            
-            return _projects;
+
+            return projects;
         }
 
         public Project GetAsync(int projectId)
@@ -74,7 +80,7 @@ namespace ProjectManagement.Api.DataAccess
                 OwnerEmployeeId = project.OwnerEmployeeId,
                 ParticipantEmployeeIds = project.ParticipantEmployeeIds
             });
-            
+
             return project.Id;
         }
 

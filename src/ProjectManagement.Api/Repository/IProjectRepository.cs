@@ -6,7 +6,7 @@ namespace ProjectManagement.Api.Repository
 {
     public interface IProjectRepository
     {
-        Task<Dictionary<int, Project>> GetProjectsAsync();
+        Task<IEnumerable<Project>> GetProjectsAsync();
 
         Project GetProjectAsync(int projectId);
 

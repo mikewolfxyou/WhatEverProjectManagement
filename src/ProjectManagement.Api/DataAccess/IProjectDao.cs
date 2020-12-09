@@ -6,7 +6,7 @@ namespace ProjectManagement.Api.DataAccess
 {
     public interface IProjectDao
     {
-        Task<Dictionary<int, Project>> GetAsync();
+        Task<IEnumerable<Project>> GetAsync();
         
         Project GetAsync(int projectId);
 

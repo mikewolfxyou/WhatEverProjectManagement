@@ -20,7 +20,7 @@ namespace ProjectManagement.Api.Repository
             _projectValidator = projectValidator;
         }
 
-        public async Task<Dictionary<int, Project>> GetProjectsAsync()
+        public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
             return await _projectDao.GetAsync();
         }
