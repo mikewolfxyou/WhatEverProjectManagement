@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -51,14 +52,14 @@ namespace ProjectManagement.Api.Tests.Controllers
         }
         
         [Test]
-        public void Should_BadRequest_When_ProjectRepoUpdateOperationFailed()
+        public async Task Should_BadRequest_When_ProjectRepoUpdateOperationFailed()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.UpdateProjectAsync(Arg.Any<Project>()).Throws(new ArgumentException());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Update(new Project
+            var httpResult = await controller.Update(new Project
             {
                 Id = 0
             });
@@ -67,14 +68,14 @@ namespace ProjectManagement.Api.Tests.Controllers
         }
         
         [Test]
-        public void Should_BadRequest_When_ProjectRepoUpdateOperationThrowException()
+        public async Task Should_BadRequest_When_ProjectRepoUpdateOperationThrowException()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.UpdateProjectAsync(Arg.Any<Project>()).Throws(new Exception());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Update(new Project
+            var httpResult = await controller.Update(new Project
             {
                 Id = 0
             });
@@ -83,14 +84,14 @@ namespace ProjectManagement.Api.Tests.Controllers
         }
         
         [Test]
-        public void Should_Accept_When_ProjectRepoUpdateOperationSuccess()
+        public async Task Should_Accept_When_ProjectRepoUpdateOperationSuccess()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.UpdateProjectAsync(Arg.Any<Project>()).Returns(1);
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Update(new Project
+            var httpResult = await controller.Update(new Project
             {
                 Id = 0
             });
@@ -99,14 +100,14 @@ namespace ProjectManagement.Api.Tests.Controllers
         }
         
         [Test]
-        public void Should_NotFound_When_ProjectNotFound()
+        public async Task Should_NotFound_When_ProjectNotFound()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.GetProjectAsync(Arg.Any<int>()).Returns(new NullProject());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Update(new Project
+            var httpResult = await controller.Update(new Project
             {
                 Id = 0
             });

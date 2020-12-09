@@ -25,9 +25,9 @@ namespace ProjectManagement.Api.Repository
             return await _projectDao.GetAsync();
         }
 
-        public Project GetProjectAsync(int projectId)
+        public async Task<Project> GetProjectAsync(int projectId)
         {
-            return _projectDao.GetAsync(projectId);
+            return await _projectDao.GetAsync(projectId);
         }
 
         public int? CreateProjectAsync(Project project)

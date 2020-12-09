@@ -52,14 +52,14 @@ namespace ProjectManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IStatusCodeActionResult Update(Project project)
+        public async Task<IStatusCodeActionResult> Update(Project project)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (_projectRepository.GetProjectAsync((int) project.Id) is NullProject)
+            if (await _projectRepository.GetProjectAsync((int) project.Id) is NullProject)
             {
                 return NotFound();
             }

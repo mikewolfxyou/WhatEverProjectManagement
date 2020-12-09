@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
-using Ubiety.Dns.Core.Records.NotUsed;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ProjectManagement.Api.DataAccess
@@ -64,9 +62,28 @@ namespace ProjectManagement.Api.DataAccess
             return projects;
         }
 
-        public Project GetAsync(int projectId)
+        public async Task<Project> GetAsync(int projectId)
         {
-            return !_projects.ContainsKey(projectId) ? new NullProject() : _projects[projectId];
+            await using var connection = await _databaseFactory.CreateConnection();
+            await using var cmd = new MySqlCommand(
+                @"SELECT * FROM project_management.project WHERE id = @id", connection);
+
+            cmd.Parameters.AddWithValue("@id", projectId);
+            var rdr = await cmd.ExecuteReaderAsync();
+
+            var projects = new List<Project>();
+            while (await rdr.ReadAsync())
+            {
+                projects.Add(new Project
+                {
+                    Id = rdr.GetInt32(0),
+                    Name = rdr.GetString(1),
+                    OwnerEmployeeId = rdr.GetInt32(2),
+                    ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(rdr.GetString(3))
+                });
+            }
+
+            return projects.Count == 0 ? new NullProject() : projects.First();
         }
 
         public int? CreateAsync(Project project)

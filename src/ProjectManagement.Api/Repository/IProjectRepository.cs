@@ -8,7 +8,7 @@ namespace ProjectManagement.Api.Repository
     {
         Task<IEnumerable<Project>> GetProjectsAsync();
 
-        Project GetProjectAsync(int projectId);
+        Task<Project> GetProjectAsync(int projectId);
 
         int? CreateProjectAsync(Project project);
 

@@ -8,7 +8,7 @@ namespace ProjectManagement.Api.DataAccess
     {
         Task<IEnumerable<Project>> GetAsync();
         
-        Project GetAsync(int projectId);
+        Task<Project> GetAsync(int projectId);
 
         int? CreateAsync(Project project);
 
