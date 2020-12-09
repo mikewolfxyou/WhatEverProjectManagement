@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Services.Validator;
@@ -19,9 +20,9 @@ namespace ProjectManagement.Api.Repository
             _projectValidator = projectValidator;
         }
 
-        public Dictionary<int, Project> GetProjectsAsync()
+        public async Task<Dictionary<int, Project>> GetProjectsAsync()
         {
-            return _projectDao.GetAsync();
+            return await _projectDao.GetAsync();
         }
 
         public Project GetProjectAsync(int projectId)

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.DataAccess
 {
     public interface IProjectDao
     {
-        Dictionary<int, Project> GetAsync();
+        Task<Dictionary<int, Project>> GetAsync();
         
         Project GetAsync(int projectId);
 

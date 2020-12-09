@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
 
@@ -35,11 +37,24 @@ namespace ProjectManagement.Api.DataAccess
             };
 
             _databaseFactory = databaseFactory;
-            var a = 1;
         }
 
-        public Dictionary<int, Project> GetAsync()
+        public async  Task<Dictionary<int, Project>> GetAsync()
         {
+            await using var connection = await _databaseFactory.CreateConnection();
+            
+            const string sql = "SELECT * FROM project_management.project";
+
+            await using var cmd = new MySqlCommand(sql, connection);
+
+            await using var rdr = await cmd.ExecuteReaderAsync();
+
+            while (rdr.Read())
+            {
+                Console.WriteLine("{0} {1} {2} {3}", rdr.GetInt32(0), rdr.GetString(1), 
+                    rdr.GetInt32(2), rdr.GetString(3));
+            }
+            
             return _projects;
         }
 

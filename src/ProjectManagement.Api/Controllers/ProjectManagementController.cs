@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -82,9 +83,9 @@ namespace ProjectManagement.Api.Controllers
         
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string Get()
+        public async  Task<string> Get()
         {
-            var projects = _projectRepository.GetProjectsAsync();
+            var projects = await _projectRepository.GetProjectsAsync();
             var entries = projects.Select(d =>
                 $"\"{d.Key}\": [{string.Join(",", d.Value)}]");
             return "{" + string.Join(",", entries) + "}";
