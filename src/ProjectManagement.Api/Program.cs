@@ -23,10 +23,6 @@ namespace ProjectManagement.Api
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .ConfigureServices((context, services) =>
-                {
-                    services.AddSingleton(tokenSource);
-                })
                 .ConfigureHostConfiguration(configurationBuilder =>
                 {
                     configurationBuilder
@@ -37,6 +33,10 @@ namespace ProjectManagement.Api
                                 Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")),
                         })
                         .AddEnvironmentVariables();
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddSingleton(tokenSource);
                 })
                 .ConfigureContainer<ContainerBuilder>((context, builder) =>
                 {

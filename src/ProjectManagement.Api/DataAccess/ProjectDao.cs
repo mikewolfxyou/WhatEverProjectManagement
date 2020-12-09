@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.DataAccess
@@ -9,7 +10,9 @@ namespace ProjectManagement.Api.DataAccess
     {
         private Dictionary<int, Project> _projects;
 
-        public ProjectDao()
+        private readonly IDatabaseFactory _databaseFactory;
+
+        public ProjectDao(IDatabaseFactory databaseFactory)
         {
             _projects = new Dictionary<int, Project>
             {
@@ -30,6 +33,9 @@ namespace ProjectManagement.Api.DataAccess
                     ParticipantEmployeeIds = new List<int> {2}
                 },
             };
+
+            _databaseFactory = databaseFactory;
+            var a = 1;
         }
 
         public Dictionary<int, Project> GetAsync()

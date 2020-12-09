@@ -1,8 +1,8 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using ProjectManagement.Api.DataAccess;
+using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Repository;
-using ProjectManagement.Api.Services;
 using ProjectManagement.Api.Services.Validator;
 
 namespace ProjectManagement.Api
@@ -20,6 +20,8 @@ namespace ProjectManagement.Api
             builder.RegisterType<ProjectValidator>();
             
             builder.RegisterInstance(configuration).As<IConfiguration>();
+
+            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().SingleInstance();
         }
     }
 }
