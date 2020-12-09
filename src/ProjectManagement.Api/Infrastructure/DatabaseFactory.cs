@@ -10,11 +10,11 @@ namespace ProjectManagement.Api.Infrastructure
         {
             var configSection = configuration.GetSection("DataAccess:Merch");
             
-            Configuration = new DatabaseConfiguration(
-                configSection.GetValue<string>("Server"),
-                configSection.GetValue<string>("Username"),
-                configSection.GetValue<string>("Password")
-                );
+            Configuration = new DatabaseConfiguration {
+                Server = configSection.GetValue<string>("Server"),
+                Username = configSection.GetValue<string>("Username"),
+                Password = configSection.GetValue<string>("Password")
+            };
         }
     }
 }

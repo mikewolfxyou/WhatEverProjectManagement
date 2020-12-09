@@ -2,17 +2,13 @@ namespace ProjectManagement.Api.Infrastructure
 {
     public class DatabaseConfiguration
     {
-        public string Server { get; }
+        public string Server { get; set; }
 
-        public string Username { get; }
+        public string Username { get; set; }
 
-        public string Password { get; }
+        public string Password { get; set; }
 
-        public DatabaseConfiguration(string server, string username, string password)
-        {
-            Server = server;
-            Username = username;
-            Password = password;
-        }
+        
+        
     }
 }

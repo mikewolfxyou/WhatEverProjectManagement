@@ -9,5 +9,6 @@
         <PackageReference Include="AutofacSerilogIntegration" Version="2.1.0" />
         <PackageReference Include="DomainValidation" Version="1.0.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.6.0" />
+        <PackageReference Include="MySql.Data" Version="8.0.22" />
     </ItemGroup>
 </Project>
