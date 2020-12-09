@@ -30,10 +30,34 @@ open your browser use
 ```
 http://localhost:5000/swagger
 ```
-to try the api.
+to try the api:
+
+There is a memory data storge:
+The Employee data can be found: [EmployeeDao.cs](https://github.com/mikewolfxyou/WhatEverProjectManagement/blob/main/src/ProjectManagement.Api/DataAccess/EmployeeDao.cs)
+The project state can be found: [ProjectState.cs](https://github.com/mikewolfxyou/WhatEverProjectManagement/blob/main/src/ProjectManagement.Api/Models/ProjectState.cs)
+
+Planned - 0, Active - 1, Done - 2, Failed - 3
+
+* Overview of all projects
+```
+GET /project-management
+```
+
+* Creating new projects
+```
+POST /project-management/project
+```
+
+* Updating projects and Assigning participants to a project.
+```
+PUT /project-management/project/{id}
+```
 
 # Development requirement
 * Download .Net Core 3.1: https://dotnet.microsoft.com/download
 * Download Rider: https://www.jetbrains.com/rider/
 
 After install .Net Core and Rider, in Rider open solution file: ACMEProjectmanagement.sln 
+
+# TODO 
+Append more unit tests for the validator and project reppsitory. 
