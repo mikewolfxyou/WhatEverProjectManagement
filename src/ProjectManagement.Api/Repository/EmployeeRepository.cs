@@ -18,7 +18,8 @@ namespace ProjectManagement.Api.Repository
         {
             var employee = _employeeDao.GetEmployeesAsync(new List<int> {employeeId}).ToList();
 
-            return employee.First() != null && 
+            return 
+                   employee.Count != 0 &&
                    employee.First().GetType() != typeof(NullEmployee) &&
                    employee.First().EmployeeRole == EmployeeRole.TeamManager;
         }
