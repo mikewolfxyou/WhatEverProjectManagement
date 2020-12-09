@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Repository;
 using ProjectManagement.Api.Services;
+using ProjectManagement.Api.Services.Validator;
 
 namespace ProjectManagement.Api
 {

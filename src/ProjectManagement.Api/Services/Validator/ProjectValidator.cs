@@ -1,8 +1,9 @@
 using DomainValidation.Validation;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
+using ProjectManagement.Api.Services.Validator.Specifications;
 
-namespace ProjectManagement.Api.Services
+namespace ProjectManagement.Api.Services.Validator
 {
     public class ProjectValidator : Validator<Project>
     {

@@ -1,7 +1,7 @@
 using DomainValidation.Interfaces.Specification;
 using ProjectManagement.Api.Models;
 
-namespace ProjectManagement.Api.Services
+namespace ProjectManagement.Api.Services.Validator.Specifications
 {
     public class ProgressIsValidSpecification : ISpecification<Project>
     {

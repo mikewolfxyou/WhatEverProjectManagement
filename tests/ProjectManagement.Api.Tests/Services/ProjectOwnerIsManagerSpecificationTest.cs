@@ -2,7 +2,7 @@ using NSubstitute;
 using NUnit.Framework;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
-using ProjectManagement.Api.Services;
+using ProjectManagement.Api.Services.Validator.Specifications;
 
 namespace ProjectManagement.Api.Tests.Services
 {

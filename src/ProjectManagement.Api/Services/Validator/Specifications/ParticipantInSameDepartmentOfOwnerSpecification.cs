@@ -3,7 +3,7 @@ using DomainValidation.Interfaces.Specification;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
 
-namespace ProjectManagement.Api.Services
+namespace ProjectManagement.Api.Services.Validator.Specifications
 {
     public class ParticipantInSameDepartmentOfOwnerSpecification : ISpecification<Project>
     {
