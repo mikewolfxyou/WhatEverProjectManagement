@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using Dapper;
 using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ProjectManagement.Api.DataAccess
 {
@@ -43,47 +42,19 @@ namespace ProjectManagement.Api.DataAccess
         public async Task<IEnumerable<Project>> GetAsync()
         {
             await using var connection = await _databaseFactory.CreateConnection();
-            await using var cmd = new MySqlCommand(@"SELECT * FROM project_management.project", connection);
-
-            var rdr = await cmd.ExecuteReaderAsync();
-
-            var projects = new List<Project>();
-            while (await rdr.ReadAsync())
-            {
-                projects.Add(new Project
-                {
-                    Id = rdr.GetInt32(0),
-                    Name = rdr.GetString(1),
-                    OwnerEmployeeId = rdr.GetInt32(2),
-                    ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(rdr.GetString(3))
-                });
-            }
-
-            return projects;
+            return await connection.QueryAsync<Project>("SELECT * FROM project_management.project");
         }
 
         public async Task<Project> GetAsync(int projectId)
         {
             await using var connection = await _databaseFactory.CreateConnection();
-            await using var cmd = new MySqlCommand(
-                @"SELECT * FROM project_management.project WHERE id = @id", connection);
+            var result = await connection.QueryAsync<Project>(
+                "SELECT * FROM project_management.project WHERE id = @Id",
+                new { Id = projectId }
+            );
 
-            cmd.Parameters.AddWithValue("@id", projectId);
-            var rdr = await cmd.ExecuteReaderAsync();
-
-            var projects = new List<Project>();
-            while (await rdr.ReadAsync())
-            {
-                projects.Add(new Project
-                {
-                    Id = rdr.GetInt32(0),
-                    Name = rdr.GetString(1),
-                    OwnerEmployeeId = rdr.GetInt32(2),
-                    ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(rdr.GetString(3))
-                });
-            }
-
-            return projects.Count == 0 ? new NullProject() : projects.First();
+            var enumerable = result.ToList();
+            return !enumerable.Any() ? new NullProject() : enumerable.First();
         }
 
         public int? CreateAsync(Project project)
