@@ -3,7 +3,7 @@ using NUnit.Framework;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Services.Validator.Specifications;
 
-namespace ProjectManagement.Api.Tests.Services
+namespace ProjectManagement.Api.Tests.Services.Specifications
 {
     public class StateIsValidSpecificationTest
     {
