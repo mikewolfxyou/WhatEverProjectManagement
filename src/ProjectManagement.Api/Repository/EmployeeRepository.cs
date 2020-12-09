@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
 
@@ -12,17 +13,19 @@ namespace ProjectManagement.Api.Repository
         {
             _employeeDao = employeeDao;
         }
-        
+
         public bool IsEmployeeTeamManagerAsync(int employeeId)
         {
-            var employee = _employeeDao.GetAsync(employeeId);
+            var employee = _employeeDao.GetEmployeesAsync(new List<int> {employeeId}).ToList();
 
-            return employee.EmployeeRole == EmployeeRole.TeamManager;
+            return employee.First() != null && 
+                   employee.First().GetType() != typeof(NullEmployee) &&
+                   employee.First().EmployeeRole == EmployeeRole.TeamManager;
         }
 
         public Employee GetEmployeeAsync(int employeeId)
         {
-            return _employeeDao.GetAsync(employeeId);
+            return GetEmployeesAsync(new List<int> {employeeId}).First();
         }
 
         public IEnumerable<Employee> GetEmployeesAsync(List<int> employeeIds)

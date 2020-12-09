@@ -42,13 +42,7 @@ namespace ProjectManagement.Api.DataAccess
                 },
             };
         }
-
-
-        public Employee GetAsync(int employeeId)
-        {
-            return _employees.ContainsKey(employeeId) ? _employees[employeeId] : new NullEmployee();
-        }
-
+        
         public IEnumerable<Employee> GetEmployeesAsync(IEnumerable<int> employeeIds)
         {
             return _employees

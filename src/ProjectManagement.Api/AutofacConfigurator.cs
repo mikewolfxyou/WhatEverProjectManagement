@@ -12,7 +12,6 @@ namespace ProjectManagement.Api
         {
             builder.RegisterType<ProjectDao>().As<IProjectDao>().SingleInstance();
             builder.RegisterType<EmployeeDao>().As<IEmployeeDao>();
-            builder.RegisterType<DepartmentDao>().As<IDepartmentDao>();
             
             builder.RegisterType<ProjectRepository>().As<IProjectRepository>();
             builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
