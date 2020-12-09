@@ -13,10 +13,13 @@ namespace ProjectManagement.Api.Services
                     "Project owner is not manager"));
             Add("ParticipantAreSameDepartmentManager",
                 new Rule<Project>(new ParticipantInSameDepartmentOfOwnerSpecification(employeeRepository),
-                    "Participant is not in same department of owner"));
-            Add("StateIsValid", new Rule<Project>(new IsStateValid(), "Project state is invalid, could be only 0 - Planned, 1 - Active, 2 - Done, 3 - Failed"));
-         
-            Add("ProgressIsValid", new Rule<Project>(new IsProgressValid(), "Progress must be between 0 and 100"));
+                    "Participant is not in the same department of owner"));
+            Add("StateIsValid",
+                new Rule<Project>(new StateIsValidSpecification(),
+                    "Project state is invalid, could be only Planned - 0, Active - 1, Done - 2, Failed - 3"));
+
+            Add("ProgressIsValid",
+                new Rule<Project>(new ProgressIsValidSpecification(), "Progress must be between 0 and 100"));
         }
     }
 }

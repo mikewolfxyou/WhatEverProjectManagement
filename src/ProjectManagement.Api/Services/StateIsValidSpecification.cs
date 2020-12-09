@@ -3,7 +3,7 @@ using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.Services
 {
-    public class IsStateValid : ISpecification<Project>
+    public class StateIsValidSpecification : ISpecification<Project>
     {
         public bool IsSatisfiedBy(Project project)
         {

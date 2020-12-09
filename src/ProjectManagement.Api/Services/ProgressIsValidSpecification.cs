@@ -3,7 +3,7 @@ using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.Services
 {
-    public class IsProgressValid : ISpecification<Project>
+    public class ProgressIsValidSpecification : ISpecification<Project>
     {
         public bool IsSatisfiedBy(Project project)
         {

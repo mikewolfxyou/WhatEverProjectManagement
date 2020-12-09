@@ -53,7 +53,7 @@ POST /project-management/project
 PUT /project-management/project/{id}
 ```
 
-# Development requirement
+# Development
 * Download .Net Core 3.1: https://dotnet.microsoft.com/download
 * Download Rider: https://www.jetbrains.com/rider/
 
