@@ -6,5 +6,6 @@ namespace ProjectManagement.Api.DataAccess
     public interface IEmployeeDao
     {
         Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(IEnumerable<int> employeeIds);
+        Task<IEnumerable<EmployeeDto>> GetEmployeesAsync();
     }
 }

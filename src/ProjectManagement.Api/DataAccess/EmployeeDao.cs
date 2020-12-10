@@ -23,5 +23,14 @@ namespace ProjectManagement.Api.DataAccess
                     new {Ids = employeeIds}
                 );
         }
+
+        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync()
+        {
+            await using var connection = await _databaseFactory.CreateConnection();
+            return await connection
+                .QueryAsync<EmployeeDto>(
+                    "SELECT * FROM project_management.employee"
+                );
+        }
     }
 }
