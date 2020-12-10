@@ -10,7 +10,7 @@ namespace ProjectManagement.Api.Repository
 
         Task<Project> GetProjectAsync(int projectId);
 
-        int? CreateProjectAsync(Project project);
+        Task CreateProjectAsync(Project project);
 
         int? UpdateProjectAsync(Project project);
     }

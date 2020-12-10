@@ -13,40 +13,40 @@ namespace ProjectManagement.Api.Tests.Controllers
     public class ProjectManagementControllerTest
     {
         [Test]
-        public void Should_BadRequest_When_ProjectRepoOperationFailed()
+        public async Task Should_BadRequest_When_ProjectRepoOperationFailed()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.CreateProjectAsync(Arg.Any<Project>()).Throws(new ArgumentException());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Create(new Project());
+            var httpResult = await controller.Create(new Project());
             
             Assert.AreEqual(StatusCodes.Status400BadRequest, httpResult.StatusCode);
         }
         
         [Test]
-        public void Should_BadRequest_When_ProjectRepoOperationThrowException()
+        public async Task Should_BadRequest_When_ProjectRepoOperationThrowException()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
             mockRepo.CreateProjectAsync(Arg.Any<Project>()).Throws(new Exception());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Create(new Project());
+            var httpResult = await controller.Create(new Project());
             
             Assert.AreEqual(StatusCodes.Status400BadRequest, httpResult.StatusCode);
         }
         
         [Test]
-        public void Should_Accept_When_ProjectRepoOperationSuccess()
+        public async Task Should_Accept_When_ProjectRepoOperationSuccess()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
-            mockRepo.CreateProjectAsync(Arg.Any<Project>()).Returns(1);
+            await mockRepo.CreateProjectAsync(Arg.Any<Project>());
             
             var controller = new ProjectManagementController(mockRepo);
 
-            var httpResult = controller.Create(new Project());
+            var httpResult = await controller.Create(new Project());
             
             Assert.AreEqual(StatusCodes.Status202Accepted, httpResult.StatusCode);
         }

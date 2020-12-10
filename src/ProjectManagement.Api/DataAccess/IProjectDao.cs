@@ -10,7 +10,7 @@ namespace ProjectManagement.Api.DataAccess
         
         Task<Project> GetAsync(int projectId);
 
-        int? CreateAsync(Project project);
+        Task CreateAsync(ProjectDto project);
 
         int? UpdateAsync(Project project);
     }

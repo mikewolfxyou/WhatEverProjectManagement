@@ -80,19 +80,16 @@ namespace ProjectManagement.Api.DataAccess
             return !enumerable.Any() ? new NullProject() : enumerable.First();
         }
 
-        public int? CreateAsync(Project project)
+        public async Task CreateAsync(ProjectDto projectDto)
         {
-            project.Id ??= _projects.Last().Key + 1;
-            _projects.Add((int) project.Id, new Project
-            {
-                Id = project.Id,
-                Name = project.Name,
-                State = project.State,
-                OwnerEmployeeId = project.OwnerEmployeeId,
-                ParticipantEmployeeIds = project.ParticipantEmployeeIds
-            });
+            await using var connection = await _databaseFactory.CreateConnection();
+            var sql =
+                $@"INSERT INTO project_management.project(name, state, progress, owner, participant) 
+                    values('{projectDto.Name}', {projectDto.State}, {projectDto.Progress}, {projectDto.Owner},
+                    '{projectDto.Participant}'
+                )";
 
-            return project.Id;
+            await connection.ExecuteAsync(sql);
         }
 
         public int? UpdateAsync(Project project)

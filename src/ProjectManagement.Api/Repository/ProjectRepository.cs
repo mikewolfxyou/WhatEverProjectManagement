@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
@@ -30,7 +31,7 @@ namespace ProjectManagement.Api.Repository
             return await _projectDao.GetAsync(projectId);
         }
 
-        public int? CreateProjectAsync(Project project)
+        public async Task CreateProjectAsync(Project project)
         {
             var projectorValidation = _projectValidator.Validate(project);
 
@@ -39,7 +40,14 @@ namespace ProjectManagement.Api.Repository
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            return _projectDao.CreateAsync(project);
+            await _projectDao.CreateAsync(new ProjectDto
+            {
+                Name = project.Name,
+                Owner = project.OwnerEmployeeId,
+                State = (int) project.State,
+                Progress = project.Progress,
+                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds)
+            });
         }
 
         public int? UpdateProjectAsync(Project project)

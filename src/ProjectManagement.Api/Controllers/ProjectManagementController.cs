@@ -24,7 +24,7 @@ namespace ProjectManagement.Api.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IStatusCodeActionResult Create(Project project)
+        public async Task<IStatusCodeActionResult> Create(Project project)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace ProjectManagement.Api.Controllers
 
             try
             {
-                _projectRepository.CreateProjectAsync(project);
+                await _projectRepository.CreateProjectAsync(project);
             }
             catch (ArgumentException exception)
             {
