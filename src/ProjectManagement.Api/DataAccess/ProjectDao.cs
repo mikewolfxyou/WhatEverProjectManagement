@@ -45,8 +45,7 @@ namespace ProjectManagement.Api.DataAccess
             await using var connection = await _databaseFactory.CreateConnection();
             var result =
                 await connection
-                    .QueryAsync<(int Id, string Name, int State, float Progress, int Owner, string Participants)>(
-                        "SELECT * FROM project_management.project");
+                    .QueryAsync<ProjectDto>("SELECT * FROM project_management.project");
 
             return result.Select(obj => new Project
             {
@@ -55,7 +54,7 @@ namespace ProjectManagement.Api.DataAccess
                 State = (ProjectState) obj.State,
                 Progress = obj.Progress,
                 OwnerEmployeeId = obj.Owner,
-                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participants)
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participant)
             });
         }
 
@@ -63,7 +62,7 @@ namespace ProjectManagement.Api.DataAccess
         {
             await using var connection = await _databaseFactory.CreateConnection();
             var result = await connection
-                .QueryAsync<(int Id, string Name, int State, float Progress, int Owner, string Participants)>(
+                .QueryAsync<ProjectDto>(
                     "SELECT * FROM project_management.project WHERE id = @Id",
                     new {Id = projectId}
                 );
@@ -75,7 +74,7 @@ namespace ProjectManagement.Api.DataAccess
                 State = (ProjectState) obj.State,
                 Progress = obj.Progress,
                 OwnerEmployeeId = obj.Owner,
-                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participants)
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participant)
             }).ToList();
 
             return !enumerable.Any() ? new NullProject() : enumerable.First();
