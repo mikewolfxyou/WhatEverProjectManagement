@@ -12,6 +12,6 @@ namespace ProjectManagement.Api.Repository
 
         Task CreateProjectAsync(Project project);
 
-        int? UpdateProjectAsync(Project project);
+        Task UpdateProjectAsync(Project project);
     }
 }

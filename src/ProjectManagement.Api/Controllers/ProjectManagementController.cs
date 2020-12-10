@@ -66,7 +66,7 @@ namespace ProjectManagement.Api.Controllers
 
             try
             {
-                _projectRepository.UpdateProjectAsync(project);
+                await _projectRepository.UpdateProjectAsync(project);
             }
             catch (ArgumentException argumentException)
             {

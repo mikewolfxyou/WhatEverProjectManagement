@@ -50,7 +50,7 @@ namespace ProjectManagement.Api.Repository
             });
         }
 
-        public int? UpdateProjectAsync(Project project)
+        public async Task UpdateProjectAsync(Project project)
         {
             var projectorValidation = _projectValidator.Validate(project);
 
@@ -59,7 +59,15 @@ namespace ProjectManagement.Api.Repository
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            return _projectDao.UpdateAsync(project);
+            await _projectDao.UpdateAsync(new ProjectDto
+            {
+                Id = (int) project.Id,
+                Name = project.Name,
+                Owner = project.OwnerEmployeeId,
+                State = (int) project.State,
+                Progress = project.Progress,
+                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds),
+            });
         }
     }
 }

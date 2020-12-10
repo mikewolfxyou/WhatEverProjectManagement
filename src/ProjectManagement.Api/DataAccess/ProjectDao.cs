@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -11,32 +10,10 @@ namespace ProjectManagement.Api.DataAccess
 {
     public class ProjectDao : IProjectDao
     {
-        private Dictionary<int, Project> _projects;
-
         private readonly IDatabaseFactory _databaseFactory;
 
         public ProjectDao(IDatabaseFactory databaseFactory)
         {
-            _projects = new Dictionary<int, Project>
-            {
-                [1] = new Project
-                {
-                    Id = 1,
-                    Name = "Project 1 - belongs to search tech",
-                    State = ProjectState.Active,
-                    OwnerEmployeeId = 4,
-                    ParticipantEmployeeIds = new List<int> {1}
-                },
-                [2] = new Project
-                {
-                    Id = 2,
-                    Name = "Project 2 - belongs to front store",
-                    State = ProjectState.Done,
-                    OwnerEmployeeId = 3,
-                    ParticipantEmployeeIds = new List<int> {2}
-                },
-            };
-
             _databaseFactory = databaseFactory;
         }
 
@@ -92,12 +69,15 @@ namespace ProjectManagement.Api.DataAccess
             await connection.ExecuteAsync(sql);
         }
 
-        public int? UpdateAsync(Project project)
+        public async Task UpdateAsync(ProjectDto projectDto)
         {
-            if (project.Id == null) throw new ArgumentException("Update project: project id is null");
-            _projects[(int) project.Id] = project;
+            await using var connection = await _databaseFactory.CreateConnection();
+            var sql =
+                $@"UPDATE project_management.project SET name = '{projectDto.Name}', state = {projectDto.State},
+                    progress = {projectDto.Progress}, owner = {projectDto.Owner}, participant = '{projectDto.Participant}'
+                    WHERE id = {projectDto.Id};";
 
-            return project.Id;
+            await connection.ExecuteAsync(sql);
         }
     }
 }

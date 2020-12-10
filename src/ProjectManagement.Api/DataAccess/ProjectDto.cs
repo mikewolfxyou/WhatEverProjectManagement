@@ -2,7 +2,7 @@ namespace ProjectManagement.Api.DataAccess
 {
     public class ProjectDto
     {
-        public int Id { get; } = 0;
+        public int Id { set; get; } = 0;
         
         public string Name { set; get; }
         

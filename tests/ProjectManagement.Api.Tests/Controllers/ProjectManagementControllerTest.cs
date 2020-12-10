@@ -87,7 +87,7 @@ namespace ProjectManagement.Api.Tests.Controllers
         public async Task Should_Accept_When_ProjectRepoUpdateOperationSuccess()
         {
             var mockRepo = Substitute.For<IProjectRepository>();
-            mockRepo.UpdateProjectAsync(Arg.Any<Project>()).Returns(1);
+            await mockRepo.UpdateProjectAsync(Arg.Any<Project>());
             
             var controller = new ProjectManagementController(mockRepo);
 

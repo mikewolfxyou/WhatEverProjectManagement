@@ -12,6 +12,6 @@ namespace ProjectManagement.Api.DataAccess
 
         Task CreateAsync(ProjectDto project);
 
-        int? UpdateAsync(Project project);
+        Task UpdateAsync(ProjectDto project);
     }
 }
