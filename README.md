@@ -27,17 +27,30 @@ docker build -t projectmanagement -f docker/acme-project-management.Dockerfile .
 docker run -it --rm -p 5000:5000 -e ASPNETCORE_ENVIRONMENT=Development --name projectmanagement projectmanagement
 ```
 
-open your browser use 
+### open your browser use 
 ```
 http://localhost:5000/swagger
 ```
-to try the api:
+### try the api:
 
-There is a memory data storge:
-The Employee data can be found: [EmployeeDao.cs](https://github.com/mikewolfxyou/WhatEverProjectManagement/blob/main/src/ProjectManagement.Api/DataAccess/EmployeeDao.cs)
-The project state can be found: [ProjectState.cs](https://github.com/mikewolfxyou/WhatEverProjectManagement/blob/main/src/ProjectManagement.Api/Models/ProjectState.cs)
+* The project state can be found: [ProjectState.cs](https://github.com/mikewolfxyou/WhatEverProjectManagement/blob/main/src/ProjectManagement.Api/Models/ProjectState.cs)
+: Planned - 0, Active - 1, Done - 2, Failed - 3
 
-Planned - 0, Active - 1, Done - 2, Failed - 3
+* participant should be employee ids (integer) json array: e.g. `[1,2,3]`
+* progress is float(4,2) number or 0
+
+### Query Employee
+* Query all employees
+``` 
+GET /employee-query/employee
+```
+
+* Get employee by id
+```
+GET /employee-query/employee/{employeeId}
+```
+
+### Project management
 
 * Overview of all projects
 ```
