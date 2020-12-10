@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   db:
-    image: mysql:5.7.32
+    image: projectmanagement-db:latest
     restart: always
     environment:
       MYSQL_DATABSE: 'project_management'
