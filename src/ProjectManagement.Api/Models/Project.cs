@@ -15,7 +15,7 @@ namespace ProjectManagement.Api.Models
         
         public List<int> ParticipantEmployeeIds { set; get; }
         
-        public double Progress {set; get; }
+        public float Progress {set; get; }
         
         
         public override string ToString()
