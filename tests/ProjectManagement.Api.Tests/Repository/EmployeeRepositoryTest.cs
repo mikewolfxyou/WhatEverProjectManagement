@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
 using ProjectManagement.Api.DataAccess;
-using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
+using ProjectManagement.Api.Services;
 
 namespace ProjectManagement.Api.Tests.Repository
 {
@@ -12,16 +13,18 @@ namespace ProjectManagement.Api.Tests.Repository
     {
         [Test]
         [TestCaseSource(typeof(EmployeeIsManagerTestCases))]
-        public void Should_CheckEmployeeIsManager_When_EmployeeId(
-            List<Employee> employees,
+        public async Task Should_CheckEmployeeIsManager_When_EmployeeId(
+            List<EmployeeDto> employees,
             bool exceptResult)
         {
             var mockEmployeeDao = Substitute.For<IEmployeeDao>();
             mockEmployeeDao.GetEmployeesAsync(Arg.Any<List<int>>()).Returns(employees);
-            
-            var employeeRepository = new EmployeeRepository(mockEmployeeDao);
 
-            Assert.AreEqual(exceptResult, employeeRepository.IsEmployeeTeamManagerAsync(1));
+            var mockEmployeeFactory = Substitute.For<IEmployeeFactory>();
+            
+            var employeeRepository = new EmployeeRepository(mockEmployeeDao, mockEmployeeFactory);
+
+            Assert.AreEqual(exceptResult, await employeeRepository.IsEmployeeTeamManagerAsync(1));
         }
 
         private class EmployeeIsManagerTestCases : IEnumerable
@@ -29,35 +32,27 @@ namespace ProjectManagement.Api.Tests.Repository
             public IEnumerator GetEnumerator()
             {
                 yield return new TestCaseData(
-                    new List<Employee>(),
+                    new List<EmployeeDto>(),
                     false
                 ).SetName("Should_NotManager_When_NoEmployeeExist");
                 
                 yield return new TestCaseData(
-                    new List<Employee>
+                    new List<EmployeeDto>()
                     {
-                        new NullEmployee()
-                    },
-                    false
-                ).SetName("Should_NotManager_When_EmployeeIsNullEmployee");
-                
-                yield return new TestCaseData(
-                    new List<Employee>()
-                    {
-                        new Employee
+                        new EmployeeDto
                         {
-                            EmployeeRole = EmployeeRole.SoftwareEngineer
+                            EmployeeRoleId = 1
                         }
                     },
                     false
                 ).SetName("Should_NotManager_When_EmployeeRoleIsNotManager");
                 
                 yield return new TestCaseData(
-                    new List<Employee>()
+                    new List<EmployeeDto>()
                     {
-                        new Employee
+                        new EmployeeDto
                         {
-                            EmployeeRole = EmployeeRole.TeamManager
+                            EmployeeRoleId = EmployeeRepository.TeamManager
                         }
                     },
                     true

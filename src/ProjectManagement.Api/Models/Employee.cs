@@ -5,6 +5,6 @@ namespace ProjectManagement.Api.Models
         public int Id;
         public string Name;
         public EmployeeRole EmployeeRole;
-        public int DepartmentId;
+        public Department Department;
     }
 }

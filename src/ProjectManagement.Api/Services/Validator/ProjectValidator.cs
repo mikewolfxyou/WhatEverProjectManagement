@@ -7,13 +7,13 @@ namespace ProjectManagement.Api.Services.Validator
 {
     public class ProjectValidator : Validator<Project>
     {
-        public ProjectValidator(IEmployeeRepository employeeRepository)
+        public ProjectValidator()
         {
             Add("OwnerIsManager",
-                new Rule<Project>(new ProjectOwnerIsManagerSpecification(employeeRepository),
+                new Rule<Project>(new ProjectOwnerIsManagerSpecification(),
                     "Project owner is not manager"));
             Add("ParticipantAreSameDepartmentManager",
-                new Rule<Project>(new ParticipantInSameDepartmentOfOwnerSpecification(employeeRepository),
+                new Rule<Project>(new ParticipantInSameDepartmentOfOwnerSpecification(),
                     "Participant is not in the same department of owner"));
             Add("StateIsValid",
                 new Rule<Project>(new StateIsValidSpecification(),

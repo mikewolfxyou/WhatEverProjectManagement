@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using Newtonsoft.Json;
+using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
 
@@ -24,7 +25,7 @@ namespace ProjectManagement.Api.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IStatusCodeActionResult> Create(Project project)
+        public async Task<IStatusCodeActionResult> Create(ProjectDto projectDto)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +34,7 @@ namespace ProjectManagement.Api.Controllers
 
             try
             {
-                await _projectRepository.CreateProjectAsync(project);
+                await _projectRepository.CreateProjectAsync(projectDto);
             }
             catch (ArgumentException exception)
             {
@@ -52,21 +53,21 @@ namespace ProjectManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IStatusCodeActionResult> Update(Project project)
+        public async Task<IStatusCodeActionResult> Update(ProjectDto projectDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (await _projectRepository.GetProjectAsync((int) project.Id) is NullProject)
+            if (await _projectRepository.GetProjectAsync(projectDto.Id) is NullProject)
             {
                 return NotFound();
             }
 
             try
             {
-                await _projectRepository.UpdateProjectAsync(project);
+                await _projectRepository.UpdateProjectAsync(projectDto);
             }
             catch (ArgumentException argumentException)
             {
@@ -86,7 +87,7 @@ namespace ProjectManagement.Api.Controllers
         public async Task<string> Get()
         {
             var projects = await _projectRepository.GetProjectsAsync();
-            return JsonSerializer.Serialize(projects);
+            return await JsonConvert.SerializeObjectAsync(projects);
         }
     }
 }

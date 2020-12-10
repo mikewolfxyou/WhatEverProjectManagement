@@ -6,16 +6,10 @@ namespace ProjectManagement.Api.Services.Validator.Specifications
 {
     public class ProjectOwnerIsManagerSpecification : ISpecification<Project>
     {
-        private readonly IEmployeeRepository _employeeRepository;
-
-        public ProjectOwnerIsManagerSpecification(IEmployeeRepository employeeRepository)
-        {
-            _employeeRepository = employeeRepository;
-        }
-
         public bool IsSatisfiedBy(Project project)
         {
-            return _employeeRepository.IsEmployeeTeamManagerAsync(project.OwnerEmployeeId);
+            return project.Owner.GetType() != typeof(NullEmployee) &&  
+                project.Owner.EmployeeRole.Id == EmployeeRepository.TeamManager;
         }
     }
 }
