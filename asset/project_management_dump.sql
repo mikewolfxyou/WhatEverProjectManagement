@@ -16,6 +16,89 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `department`
+--
+
+DROP TABLE IF EXISTS `department`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `department` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `departmentName` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `department_departmentName_uindex` (`departmentName`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `department`
+--
+
+LOCK TABLES `department` WRITE;
+/*!40000 ALTER TABLE `department` DISABLE KEYS */;
+INSERT INTO `department` VALUES (2,'Backend'),(4,'CEO Office'),(3,'Frontend'),(1,'Infrastructure');
+/*!40000 ALTER TABLE `department` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employee` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(256) NOT NULL,
+  `lastName` varchar(256) NOT NULL,
+  `departmentId` int(11) NOT NULL,
+  `employeeRoleId` int(11) NOT NULL,
+  `identifyId` varchar(8) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `employee_identifyId_uindex` (`identifyId`),
+  KEY `employeeRoleId` (`employeeRoleId`),
+  KEY `departmentId` (`departmentId`),
+  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`employeeRoleId`) REFERENCES `employeeRole` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`departmentId`) REFERENCES `department` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employee`
+--
+
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES (2,'Mike','Zhang',1,1,'mz001'),(3,'Tom','Berlin',1,2,'tb001'),(4,'Jerry','Hamburg',2,1,'jh001'),(5,'Peter','Zimmer',2,2,'pz001'),(6,'Hans','Mueller',1,1,'hm001'),(7,'Andy','Liu',2,1,'al001');
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `employeeRole`
+--
+
+DROP TABLE IF EXISTS `employeeRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employeeRole` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `RoleName` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `EmployeeRole_RoleName_uindex` (`RoleName`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employeeRole`
+--
+
+LOCK TABLES `employeeRole` WRITE;
+/*!40000 ALTER TABLE `employeeRole` DISABLE KEYS */;
+INSERT INTO `employeeRole` VALUES (3,'Product Manager'),(1,'Software Engineer'),(2,'Team Manager');
+/*!40000 ALTER TABLE `employeeRole` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `project`
 --
 
@@ -30,8 +113,10 @@ CREATE TABLE `project` (
   `owner` int(11) NOT NULL,
   `participant` json DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `project_name_uindex` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `project_name_uindex` (`name`),
+  KEY `owner` (`owner`),
+  CONSTRAINT `project_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `employee` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +125,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,'Project 1',0,95.02,1,'[2, 3]'),(2,'Project DDD',1,0.00,2,'[3, 4]'),(3,'p2',2,90.00,3,'[2]');
+INSERT INTO `project` VALUES (5,'Project 2035',0,0.00,3,'[2, 4]');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,5 +138,6 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-10 10:07:02
-GRANT ALL PRIVILEGES ON project_management.* TO 'user'@'%';
+-- Dump completed on 2020-12-10 14:11:18
+
+GRANT ALL PRIVILEGES ON database_name.* TO 'user'@'%';
