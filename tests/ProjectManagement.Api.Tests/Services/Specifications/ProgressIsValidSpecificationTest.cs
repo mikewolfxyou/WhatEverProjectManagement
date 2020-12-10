@@ -33,7 +33,7 @@ namespace ProjectManagement.Api.Tests.Services.Specifications
                 yield return new TestCaseData(
                     new Project
                     {
-                        Progress = 100.01
+                        Progress = 100.01f
                     },
                     false
                 ).SetName("Should_NotSatisfied_When_ProjectProgressIsMoreThan100");
@@ -41,7 +41,7 @@ namespace ProjectManagement.Api.Tests.Services.Specifications
                 yield return new TestCaseData(
                     new Project
                     {
-                        Progress = 99.99
+                        Progress = 99.99f
                     },
                     true
                 ).SetName("Should_Satisfied_When_ProjectProgressBetween0And100");

@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
 
@@ -23,7 +24,7 @@ namespace ProjectManagement.Api.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IStatusCodeActionResult Create(Project project)
+        public async Task<IStatusCodeActionResult> Create(Project project)
         {
             if (!ModelState.IsValid)
             {
@@ -32,7 +33,7 @@ namespace ProjectManagement.Api.Controllers
 
             try
             {
-                _projectRepository.CreateProjectAsync(project);
+                await _projectRepository.CreateProjectAsync(project);
             }
             catch (ArgumentException exception)
             {
@@ -51,21 +52,21 @@ namespace ProjectManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IStatusCodeActionResult Update(Project project)
+        public async Task<IStatusCodeActionResult> Update(Project project)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (_projectRepository.GetProjectAsync((int) project.Id) is NullProject)
+            if (await _projectRepository.GetProjectAsync((int) project.Id) is NullProject)
             {
                 return NotFound();
             }
 
             try
             {
-                _projectRepository.UpdateProjectAsync(project);
+                await _projectRepository.UpdateProjectAsync(project);
             }
             catch (ArgumentException argumentException)
             {
@@ -82,12 +83,10 @@ namespace ProjectManagement.Api.Controllers
         
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string Get()
+        public async Task<string> Get()
         {
-            var projects = _projectRepository.GetProjectsAsync();
-            var entries = projects.Select(d =>
-                $"\"{d.Key}\": [{string.Join(",", d.Value)}]");
-            return "{" + string.Join(",", entries) + "}";
+            var projects = await _projectRepository.GetProjectsAsync();
+            return JsonSerializer.Serialize(projects);
         }
     }
 }

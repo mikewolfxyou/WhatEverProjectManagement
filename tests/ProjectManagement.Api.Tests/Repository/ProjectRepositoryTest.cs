@@ -22,7 +22,7 @@ namespace ProjectManagement.Api.Tests.Repository
             
             var projectRepository = new ProjectRepository(mockProjectDao, projectValidator);
 
-            Assert.Throws<ArgumentException>(() => projectRepository.CreateProjectAsync(new Project()));
+            Assert.ThrowsAsync<ArgumentException>(async () => await projectRepository.CreateProjectAsync(new Project()));
         }
         
         [Test]
@@ -37,7 +37,7 @@ namespace ProjectManagement.Api.Tests.Repository
             
             var projectRepository = new ProjectRepository(mockProjectDao, projectValidator);
 
-            Assert.Throws<ArgumentException>(() => projectRepository.UpdateProjectAsync(new Project()));
+            Assert.ThrowsAsync<ArgumentException>(async () => await projectRepository.UpdateProjectAsync(new Project()));
         }
     }
 }

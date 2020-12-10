@@ -1,68 +1,83 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Dapper;
+using ProjectManagement.Api.Infrastructure;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.DataAccess
 {
     public class ProjectDao : IProjectDao
     {
-        private Dictionary<int, Project> _projects;
+        private readonly IDatabaseFactory _databaseFactory;
 
-        public ProjectDao()
+        public ProjectDao(IDatabaseFactory databaseFactory)
         {
-            _projects = new Dictionary<int, Project>
+            _databaseFactory = databaseFactory;
+        }
+
+        public async Task<IEnumerable<Project>> GetAsync()
+        {
+            await using var connection = await _databaseFactory.CreateConnection();
+            var result =
+                await connection
+                    .QueryAsync<ProjectDto>("SELECT * FROM project_management.project");
+
+            return result.Select(obj => new Project
             {
-                [1] = new Project
-                {
-                    Id = 1,
-                    Name = "Project 1 - belongs to search tech",
-                    State = ProjectState.Active,
-                    OwnerEmployeeId = 4,
-                    ParticipantEmployeeIds = new List<int> {1}
-                },
-                [2] = new Project
-                {
-                    Id = 2,
-                    Name = "Project 2 - belongs to front store",
-                    State = ProjectState.Done,
-                    OwnerEmployeeId = 3,
-                    ParticipantEmployeeIds = new List<int> {2}
-                },
-            };
-        }
-
-        public Dictionary<int, Project> GetAsync()
-        {
-            return _projects;
-        }
-
-        public Project GetAsync(int projectId)
-        {
-            return !_projects.ContainsKey(projectId) ? new NullProject() : _projects[projectId];
-        }
-
-        public int? CreateAsync(Project project)
-        {
-            project.Id ??= _projects.Last().Key + 1;
-            _projects.Add((int) project.Id, new Project
-            {
-                Id = project.Id,
-                Name = project.Name,
-                State = project.State,
-                OwnerEmployeeId = project.OwnerEmployeeId,
-                ParticipantEmployeeIds = project.ParticipantEmployeeIds
+                Id = obj.Id,
+                Name = obj.Name,
+                State = (ProjectState) obj.State,
+                Progress = obj.Progress,
+                OwnerEmployeeId = obj.Owner,
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participant)
             });
-            
-            return project.Id;
         }
 
-        public int? UpdateAsync(Project project)
+        public async Task<Project> GetAsync(int projectId)
         {
-            if (project.Id == null) throw new ArgumentException("Update project: project id is null");
-            _projects[(int) project.Id] = project;
+            await using var connection = await _databaseFactory.CreateConnection();
+            var result = await connection
+                .QueryAsync<ProjectDto>(
+                    "SELECT * FROM project_management.project WHERE id = @Id",
+                    new {Id = projectId}
+                );
 
-            return project.Id;
+            var enumerable = result.Select(obj => new Project
+            {
+                Id = obj.Id,
+                Name = obj.Name,
+                State = (ProjectState) obj.State,
+                Progress = obj.Progress,
+                OwnerEmployeeId = obj.Owner,
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participant)
+            }).ToList();
+
+            return !enumerable.Any() ? new NullProject() : enumerable.First();
+        }
+
+        public async Task CreateAsync(ProjectDto projectDto)
+        {
+            await using var connection = await _databaseFactory.CreateConnection();
+            var sql =
+                $@"INSERT INTO project_management.project(name, state, progress, owner, participant) 
+                    values('{projectDto.Name}', {projectDto.State}, {projectDto.Progress}, {projectDto.Owner},
+                    '{projectDto.Participant}'
+                )";
+
+            await connection.ExecuteAsync(sql);
+        }
+
+        public async Task UpdateAsync(ProjectDto projectDto)
+        {
+            await using var connection = await _databaseFactory.CreateConnection();
+            var sql =
+                $@"UPDATE project_management.project SET name = '{projectDto.Name}', state = {projectDto.State},
+                    progress = {projectDto.Progress}, owner = {projectDto.Owner}, participant = '{projectDto.Participant}'
+                    WHERE id = {projectDto.Id};";
+
+            await connection.ExecuteAsync(sql);
         }
     }
 }

@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  db:
+    image: projectmanagement-db:latest
+    restart: always
+    environment:
+      MYSQL_DATABSE: 'project_management'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'weakpassword'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+
+  project-management:
+    image: projectmanagement:latest
+    environment:
+      ASPNETCORE_ENVIRONMENT: 'Development'
+    ports:
+      - '5000:5000'
+    expose:
+      - '5000'
+
+volumes:
+  my-db:

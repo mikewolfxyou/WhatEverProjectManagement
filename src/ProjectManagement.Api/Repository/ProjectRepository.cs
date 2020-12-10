@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Services.Validator;
@@ -19,17 +21,17 @@ namespace ProjectManagement.Api.Repository
             _projectValidator = projectValidator;
         }
 
-        public Dictionary<int, Project> GetProjectsAsync()
+        public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
-            return _projectDao.GetAsync();
+            return await _projectDao.GetAsync();
         }
 
-        public Project GetProjectAsync(int projectId)
+        public async Task<Project> GetProjectAsync(int projectId)
         {
-            return _projectDao.GetAsync(projectId);
+            return await _projectDao.GetAsync(projectId);
         }
 
-        public int? CreateProjectAsync(Project project)
+        public async Task CreateProjectAsync(Project project)
         {
             var projectorValidation = _projectValidator.Validate(project);
 
@@ -38,10 +40,17 @@ namespace ProjectManagement.Api.Repository
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            return _projectDao.CreateAsync(project);
+            await _projectDao.CreateAsync(new ProjectDto
+            {
+                Name = project.Name,
+                Owner = project.OwnerEmployeeId,
+                State = (int) project.State,
+                Progress = project.Progress,
+                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds)
+            });
         }
 
-        public int? UpdateProjectAsync(Project project)
+        public async Task UpdateProjectAsync(Project project)
         {
             var projectorValidation = _projectValidator.Validate(project);
 
@@ -50,7 +59,15 @@ namespace ProjectManagement.Api.Repository
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            return _projectDao.UpdateAsync(project);
+            await _projectDao.UpdateAsync(new ProjectDto
+            {
+                Id = (int) project.Id,
+                Name = project.Name,
+                Owner = project.OwnerEmployeeId,
+                State = (int) project.State,
+                Progress = project.Progress,
+                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds),
+            });
         }
     }
 }

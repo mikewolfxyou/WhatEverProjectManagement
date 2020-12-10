@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.Repository
 {
     public interface IProjectRepository
     {
-        Dictionary<int, Project> GetProjectsAsync();
+        Task<IEnumerable<Project>> GetProjectsAsync();
 
-        Project GetProjectAsync(int projectId);
+        Task<Project> GetProjectAsync(int projectId);
 
-        int? CreateProjectAsync(Project project);
+        Task CreateProjectAsync(Project project);
 
-        int? UpdateProjectAsync(Project project);
+        Task UpdateProjectAsync(Project project);
     }
 }
