@@ -6,10 +6,10 @@ namespace ProjectManagement.Api.Repository
 {
     public interface IEmployeeRepository
     {
-        Task<bool> IsEmployeeTeamManagerAsync(int employeeId);
-
         Task<Employee> GetEmployeeAsync(int employeeId);
 
         Task<IEnumerable<Employee>> GetEmployeesAsync(IEnumerable<int> employeeIds);
+        
+        Task<IEnumerable<Employee>> GetEmployeesAsync();
     }
 }

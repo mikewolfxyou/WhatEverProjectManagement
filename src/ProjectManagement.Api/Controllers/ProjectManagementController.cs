@@ -84,10 +84,17 @@ namespace ProjectManagement.Api.Controllers
         
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> Get()
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IStatusCodeActionResult> Get()
         {
-            var projects = await _projectRepository.GetProjectsAsync();
-            return await JsonConvert.SerializeObjectAsync(projects);
+            try
+            {
+                return Ok(await JsonConvert.SerializeObjectAsync(await _projectRepository.GetProjectsAsync()));
+            }
+            catch (Exception e)
+            {
+                return NotFound();
+            }
         }
     }
 }
