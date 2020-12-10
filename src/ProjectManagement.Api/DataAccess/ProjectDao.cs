@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Dapper;
 using ProjectManagement.Api.Infrastructure;
@@ -42,18 +43,41 @@ namespace ProjectManagement.Api.DataAccess
         public async Task<IEnumerable<Project>> GetAsync()
         {
             await using var connection = await _databaseFactory.CreateConnection();
-            return await connection.QueryAsync<Project>("SELECT * FROM project_management.project");
+            var result =
+                await connection
+                    .QueryAsync<(int Id, string Name, int State, float Progress, int Owner, string Participants)>(
+                        "SELECT * FROM project_management.project");
+
+            return result.Select(obj => new Project
+            {
+                Id = obj.Id,
+                Name = obj.Name,
+                State = (ProjectState) obj.State,
+                Progress = obj.Progress,
+                OwnerEmployeeId = obj.Owner,
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participants)
+            });
         }
 
         public async Task<Project> GetAsync(int projectId)
         {
             await using var connection = await _databaseFactory.CreateConnection();
-            var result = await connection.QueryAsync<Project>(
-                "SELECT * FROM project_management.project WHERE id = @Id",
-                new { Id = projectId }
-            );
+            var result = await connection
+                .QueryAsync<(int Id, string Name, int State, float Progress, int Owner, string Participants)>(
+                    "SELECT * FROM project_management.project WHERE id = @Id",
+                    new {Id = projectId}
+                );
 
-            var enumerable = result.ToList();
+            var enumerable = result.Select(obj => new Project
+            {
+                Id = obj.Id,
+                Name = obj.Name,
+                State = (ProjectState) obj.State,
+                Progress = obj.Progress,
+                OwnerEmployeeId = obj.Owner,
+                ParticipantEmployeeIds = JsonSerializer.Deserialize<List<int>>(obj.Participants)
+            }).ToList();
+
             return !enumerable.Any() ? new NullProject() : enumerable.First();
         }
 
