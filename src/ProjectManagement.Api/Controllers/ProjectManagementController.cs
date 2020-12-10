@@ -48,7 +48,7 @@ namespace ProjectManagement.Api.Controllers
             return Accepted();
         }
         
-        [HttpPut("project/{id}")]
+        [HttpPut("project")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
