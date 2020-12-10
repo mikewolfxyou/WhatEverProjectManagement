@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.Repository
 {
     public interface IEmployeeRepository
     {
-        bool IsEmployeeTeamManagerAsync(int employeeId);
+        Task<bool> IsEmployeeTeamManagerAsync(int employeeId);
 
-        Employee GetEmployeeAsync(int employeeId);
+        Task<Employee> GetEmployeeAsync(int employeeId);
 
-        IEnumerable<Employee> GetEmployeesAsync(List<int> employeeIds);
+        Task<IEnumerable<Employee>> GetEmployeesAsync(IEnumerable<int> employeeIds);
     }
 }

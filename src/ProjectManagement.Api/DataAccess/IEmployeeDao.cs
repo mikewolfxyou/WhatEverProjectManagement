@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using ProjectManagement.Api.Models;
+using System.Threading.Tasks;
 
 namespace ProjectManagement.Api.DataAccess
 {
     public interface IEmployeeDao
     {
-        IEnumerable<Employee> GetEmployeesAsync(IEnumerable<int> employeeIds);
+        Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(IEnumerable<int> employeeIds);
     }
 }

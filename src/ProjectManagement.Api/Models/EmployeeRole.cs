@@ -1,8 +1,8 @@
 namespace ProjectManagement.Api.Models
 {
-    public enum EmployeeRole
+    public class EmployeeRole
     {
-        SoftwareEngineer,
-        TeamManager
+        public int Id { get; set; }
+        public string RoleName { get; set; }
     }
 }

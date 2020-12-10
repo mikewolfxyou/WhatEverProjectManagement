@@ -1,4 +1,3 @@
-using NSubstitute;
 using NUnit.Framework;
 using ProjectManagement.Api.Models;
 using ProjectManagement.Api.Repository;
@@ -11,23 +10,36 @@ namespace ProjectManagement.Api.Tests.Services.Specifications
         [Test]
         public void Should_NotSatisfied_When_ProjectOwnerIsNotManager()
         {
-            var mockEmployeeRepo = Substitute.For<IEmployeeRepository>();
-            mockEmployeeRepo.IsEmployeeTeamManagerAsync(Arg.Any<int>()).Returns(false);
-            var projectOwnerIsManagerSpecification = new ProjectOwnerIsManagerSpecification(mockEmployeeRepo);
+            var projectOwnerIsManagerSpecification = new ProjectOwnerIsManagerSpecification();
             
             Assert.AreEqual(false, projectOwnerIsManagerSpecification.IsSatisfiedBy(
-                new Project()));
+                new Project
+                {
+                    Owner = new Employee
+                    {
+                        EmployeeRole = new EmployeeRole
+                        {
+                            Id = 1
+                        }
+                    }
+                }));
         }
         
         [Test]
         public void Should_Satisfied_When_ProjectOwnerIsManager()
         {
-            var mockEmployeeRepo = Substitute.For<IEmployeeRepository>();
-            mockEmployeeRepo.IsEmployeeTeamManagerAsync(Arg.Any<int>()).Returns(true);
-            var projectOwnerIsManagerSpecification = new ProjectOwnerIsManagerSpecification(mockEmployeeRepo);
-            
+            var projectOwnerIsManagerSpecification = new ProjectOwnerIsManagerSpecification();
             Assert.AreEqual(true, projectOwnerIsManagerSpecification.IsSatisfiedBy(
-                new Project()));
+                new Project
+                {
+                    Owner = new Employee
+                    {
+                        EmployeeRole = new EmployeeRole
+                        {
+                            Id = EmployeeRepository.TeamManager
+                        }
+                    }
+                }));
         }
     }
 }

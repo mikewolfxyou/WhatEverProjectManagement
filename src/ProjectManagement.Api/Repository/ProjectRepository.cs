@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
+using ProjectManagement.Api.Services;
 using ProjectManagement.Api.Services.Validator;
 
 namespace ProjectManagement.Api.Repository
@@ -15,59 +15,60 @@ namespace ProjectManagement.Api.Repository
         
         private readonly ProjectValidator _projectValidator;
 
-        public ProjectRepository(IProjectDao projectDao, ProjectValidator projectValidator)
+        private readonly IProjectFactory _projectFactory;
+
+        public ProjectRepository(IProjectDao projectDao, ProjectValidator projectValidator, IProjectFactory projectFactory)
         {
             _projectDao = projectDao;
             _projectValidator = projectValidator;
+            _projectFactory = projectFactory;
         }
 
         public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
-            return await _projectDao.GetAsync();
+            var projectDtos = await _projectDao.GetAsync();
+            var projects = new List<Project>();
+            foreach (var projectDto in projectDtos)
+            {
+                projects.Add(await _projectFactory.CreateAsync(projectDto));
+            }
+
+            return projects;
         }
 
         public async Task<Project> GetProjectAsync(int projectId)
         {
-            return await _projectDao.GetAsync(projectId);
+            var projectDtos = await _projectDao.GetAsync(projectId);
+            var enumerable = projectDtos.ToList();
+            if (!enumerable.Any())
+            {
+                return new NullProject();
+            }
+            return await _projectFactory.CreateAsync(enumerable.First());
         }
 
-        public async Task CreateProjectAsync(Project project)
+        public async Task CreateProjectAsync(ProjectDto projectDto)
         {
-            var projectorValidation = _projectValidator.Validate(project);
+            var projectorValidation = _projectValidator.Validate(await _projectFactory.CreateAsync(projectDto));
 
             if (!projectorValidation.IsValid)
             {
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            await _projectDao.CreateAsync(new ProjectDto
-            {
-                Name = project.Name,
-                Owner = project.OwnerEmployeeId,
-                State = (int) project.State,
-                Progress = project.Progress,
-                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds)
-            });
+            await _projectDao.CreateAsync(projectDto);
         }
-
-        public async Task UpdateProjectAsync(Project project)
+        
+        public async Task UpdateProjectAsync(ProjectDto projectDto)
         {
-            var projectorValidation = _projectValidator.Validate(project);
+            var projectorValidation = _projectValidator.Validate(await _projectFactory.CreateAsync(projectDto));
 
             if (!projectorValidation.IsValid)
             {
                 throw new ArgumentException(projectorValidation.Erros.First().Message);
             }
 
-            await _projectDao.UpdateAsync(new ProjectDto
-            {
-                Id = (int) project.Id,
-                Name = project.Name,
-                Owner = project.OwnerEmployeeId,
-                State = (int) project.State,
-                Progress = project.Progress,
-                Participant = JsonSerializer.Serialize(project.ParticipantEmployeeIds),
-            });
+            await _projectDao.UpdateAsync(projectDto);
         }
     }
 }

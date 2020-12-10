@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProjectManagement.Api.DataAccess;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.Repository
@@ -10,8 +11,8 @@ namespace ProjectManagement.Api.Repository
 
         Task<Project> GetProjectAsync(int projectId);
 
-        Task CreateProjectAsync(Project project);
+        Task CreateProjectAsync(ProjectDto projectDto);
 
-        Task UpdateProjectAsync(Project project);
+        Task UpdateProjectAsync(ProjectDto projectDto);
     }
 }
