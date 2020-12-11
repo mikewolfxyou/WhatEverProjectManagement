@@ -24,7 +24,7 @@ It's now up to you to design and build an API which fulfils these requirements.
 ```
 docker build -t projectmanagement-db -f docker/mysql_db.Dockerfile .
 docker build -t projectmanagement -f docker/acme-project-management.Dockerfile .
-docker run -it --rm -p 5000:5000 -e ASPNETCORE_ENVIRONMENT=Development --name projectmanagement projectmanagement
+docker-compose up
 ```
 
 ### open your browser use 
