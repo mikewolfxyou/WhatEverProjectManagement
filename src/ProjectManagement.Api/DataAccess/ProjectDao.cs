@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using ProjectManagement.Api.Infrastructure;
+using ProjectManagement.Api.Infrastructure.Database;
 
 namespace ProjectManagement.Api.DataAccess
 {

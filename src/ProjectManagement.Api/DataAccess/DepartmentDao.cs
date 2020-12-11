@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using ProjectManagement.Api.Infrastructure;
+using ProjectManagement.Api.Infrastructure.Database;
 using ProjectManagement.Api.Models;
 
 namespace ProjectManagement.Api.DataAccess

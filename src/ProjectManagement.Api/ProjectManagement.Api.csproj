@@ -12,4 +12,8 @@
         <PackageReference Include="NSwag.AspNetCore" Version="13.6.0" />
         <PackageReference Include="MySql.Data" Version="8.0.22" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common.Kafka\Common.Kafka.csproj" />
+    </ItemGroup>
 </Project>

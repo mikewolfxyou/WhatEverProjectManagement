@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 
-namespace ProjectManagement.Api.Infrastructure
+namespace ProjectManagement.Api.Infrastructure.Database
 {
     public class DatabaseFactory : IDatabaseFactory
     {

@@ -1,7 +1,10 @@
 using Autofac;
+using Common.Kafka;
+using Common.Kafka.Producer;
 using Microsoft.Extensions.Configuration;
 using ProjectManagement.Api.DataAccess;
-using ProjectManagement.Api.Infrastructure;
+using ProjectManagement.Api.Entities;
+using ProjectManagement.Api.Infrastructure.Database;
 using ProjectManagement.Api.Repository;
 using ProjectManagement.Api.Services;
 using ProjectManagement.Api.Services.Validator;
@@ -28,6 +31,10 @@ namespace ProjectManagement.Api
 
             builder.RegisterType<ProjectFactory>().As<IProjectFactory>();
             builder.RegisterType<EmployeeFactory>().As<IEmployeeFactory>();
+
+            builder.RegisterType<KafkaProducer<ProjectMessage, ProjectMessage>>()
+                .As<IKafkaProducer<ProjectMessage, ProjectMessage>>()
+                .SingleInstance();
         }
     }
 }
