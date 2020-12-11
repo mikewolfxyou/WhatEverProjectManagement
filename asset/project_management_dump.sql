@@ -140,4 +140,4 @@ UNLOCK TABLES;
 
 -- Dump completed on 2020-12-10 14:11:18
 
-GRANT ALL PRIVILEGES ON database_name.* TO 'user'@'%';
+GRANT ALL PRIVILEGES ON project_management.* TO 'user'@'%';
