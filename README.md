@@ -17,8 +17,6 @@ After an analysis of the requirements you should have the following insights:
 * Only managers can be the owner of a project
 * Participants can be assigned to a project
 * Participants must be part of the same department as the owner
-* Assignable participants or owner are employees, which are managed via an existing dedicated API (See https://employees-api.vercel.app/ for the API documentation)
-It's now up to you to design and build an API which fulfils these requirements.
 
 # Docker run to test
 ```
